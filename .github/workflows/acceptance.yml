@@ -1,0 +1,20 @@
+name: LI08 fixture validation
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    name: LI08 acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read the tested revision and check the fixture
+        shell: bash
+        run: |
+          set -eu
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_SHA}"
+          git checkout --detach FETCH_HEAD
+          test "$(cat acceptance.txt)" = "LI08 public acceptance"
